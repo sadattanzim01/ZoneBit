@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Timezone finder for world capital cities using bitwise operations" />
+    <link rel="icon" type="image/png" href="img.png" />
+    <title>ZoneBit — City Timezone Finder</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+    <div class="container">
+        <!-- HEADER -->
+        <header>
+            <img src="img.png" class="logo-img" alt="ZoneBit logo" />
+            <div class="header-top">
+                <h1>ZoneBit</h1>
+                <!--<div class="logo-block">
+                    <h1>ZoneBit</h1>
+                </div>-->
+            </div>
+            <p class="tagline">Find your timezone, bit by bit.</p>
+            <p class="description">
+                Uses <strong>24-bit bitmasks</strong> — one bit per GMT offset — to match cities
+                to timezones via bitwise AND. No <code>===</code> comparisons.
+            </p>
+        </header>
+
+        <div class="main-grid">
+
+            <!--the list of cities-->
+            <section class="panel city-panel">
+                <h2 class="panel-title">🌐 Cities</h2>
+                <div id="city-list"></div>
+            </section>
+
+            <!--search result and explainer section-->
+            <div class="right-col">
+                <!-- Search Panel -->
+                <section class="panel search-panel">
+                    <h2 class="panel-title">🔍 Search GMT Offset</h2>
+                    <p class="search-hint">Enter an integer e.g. <code>-4</code>, <code>0</code>, <code>+9</code></p>
+                    <div class="search-row">
+                        <div class="input-wrap">
+                            <span class="input-prefix">GMT</span>
+                            <input
+                            type="number"
+                            id="gmt-input"
+                            min="-12"
+                            max="13"
+                            placeholder="0"
+                            autocomplete="off"
+                            />
+                        </div>
+                        <button id="find-btn" class="btn-primary">Find Cities</button>
+                        <button id="find-not-btn" class="btn-ghost">NOT in GMT</button>
+                    </div>
+                </section>
+
+                <!--output panel-->
+                <section class="panel output-panel" id="output-section">
+                <div id="result-count"></div>
+                <ul id="results"></ul>
+                </section>
+
+                <!--bit explainer-->
+                <section class="panel explainer-panel">
+                    <h2 class="panel-title">💡 How It Works</h2>
+                    <div class="explainer-body">
+                        <p>Each city is assigned a <strong>24-bit number</strong> with exactly one bit ON:</p>
+                        <pre><code>GMT offset → bit position = offset + 12
+        Moscow  (GMT+3) → bit 15 → 000000000100000000000000
+        Paris   (GMT+2) → bit 14 → 000000000010000000000000
+        New York(GMT-4) → bit  8 → 000000000000000100000000</code></pre>
+                        <p>To search, a <strong>mask</strong> is built for the target timezone.
+                        A bitwise AND <code>&</code> is applied:</p>
+                        <pre><code>city.bits & searchMask !== 0  →  MATCH ✓
+                        city.bits & searchMask === 0  →  NO MATCH ✗</code></pre>
+                    </div>
+                </section>
+
+            </div>
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
